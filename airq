@@ -7,51 +7,104 @@ ________________________________________________________________________________
 import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, Binarizer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
 
 # Load datasets
 df = pd.read_csv("air.csv")
 df1 = pd.read_csv("student.csv")
 
-# Initial inspection
+# Explore air.csv dataset
 df.shape
 df.head()
 df.count()
 df.isnull().sum()
 df.info()
 
-# Drop rows with any missing values
+# Handle missing values
 A = df.dropna()
 A.shape
 
-# Fill missing values with 0
 A = df.fillna(0)
 A.shape
 
-# Forward fill (pad) missing values
-A = df.fillna(method='pad')
+A = df.fillna(method='pad')  # Forward fill
+A.head(10)
 
-# Backward fill missing values
-A = df.fillna(method='backfill')
+A = df.fillna(method='backfill')  # Backward fill
+A.head(8)
 
-# Replace NaN in 'Ozone' with mean
+# Replace NaN with mean and median for Ozone column
 A = df['Ozone'].replace(np.nan, df['Ozone'].mean())
 A.head(10)
 
-# Replace NaN in 'Ozone' with median
 A = df['Ozone'].replace(np.nan, df['Ozone'].median())
 A.head()
 
-# Imputation using SimpleImputer - Mean
+# Impute missing values using SimpleImputer
 imp = SimpleImputer(missing_values=np.nan, strategy='mean')
 A = imp.fit_transform(df)
-A
+A = pd.DataFrame(A, columns=df.columns)
+A.head()
 
-# Imputation using SimpleImputer - Most Frequent
 imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
 A = imp.fit_transform(df)
-A
+A = pd.DataFrame(A, columns=df.columns)
+A.head()
+
+# Train-test split
+train, test = train_test_split(A)
+len(train)
+train.head()
+
+train, test = train_test_split(A, test_size=0.20)
+len(test)
+len(train)
+
+# Descriptive statistics
+A.describe()
+
+# StandardScaler
+scaler = StandardScaler()
+B = scaler.fit_transform(A)
+pd.DataFrame(B).describe()
+
+# MinMaxScaler
+scaler = MinMaxScaler()
+B = scaler.fit_transform(A)
+pd.DataFrame(B).describe()
+
+# Binarizer
+bin = Binarizer(threshold=0.5)
+B = bin.fit_transform(B)
+pd.DataFrame(B)
+
+# Label encoding for student.csv
+data = pd.read_csv("Student.csv")
+le = LabelEncoder()
+B = le.fit_transform(data['class'])
+B
+
+# Linear Regression
+X = A['Ozone'].values
+X = X.reshape(-1, 1)
+Y = A['Temp']
+model = LinearRegression()
+model.fit(X, Y)
+model.score(X, Y) * 100
+model.predict([[128]])
+
+# Scatter plot
+plt.scatter(X, Y)
+plt.show()
 
 # Data integration
+data.columns = data.columns.str.strip()
+combined = pd.concat([df, data[['roll']]], axis=1)
+
 df1.columns = df1.columns.str.strip()
 combined = pd.concat([df, df1[['roll']]], axis=1)
 combined.head(6)
