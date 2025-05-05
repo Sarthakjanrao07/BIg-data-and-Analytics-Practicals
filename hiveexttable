@@ -1,0 +1,46 @@
+-- Step 1: Create and Use Database
+CREATE DATABASE IF NOT EXISTS student_db;
+USE student_db;
+
+-- Step 2: Drop Tables if Exist
+DROP TABLE IF EXISTS student_info;
+DROP TABLE IF EXISTS student_marks;
+DROP TABLE IF EXISTS student_external;
+
+-- Step 3: Create Tables
+CREATE TABLE student_info (
+    stu_id INT,
+    stu_name STRING,
+    stu_branch STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+CREATE TABLE student_marks (
+    stu_id INT,
+    subject STRING,
+    marks INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+-- Step 4: Alter Table
+ALTER TABLE student_info ADD COLUMNS (stu_year INT);
+
+-- Step 5: Load Data into Tables (Assuming CSVs exist in HDFS)
+LOAD DATA INPATH '/user/hive/student_info.csv' INTO TABLE student_info;
+LOAD DATA INPATH '/user/hive/student_marks.csv' INTO TABLE student_marks;
+
+-- Step 6: Create External Table
+CREATE EXTERNAL TABLE student_external (
+    stu_id INT,
+    stu_name STRING,
+    stu_branch STRING,
+    stu_year INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/user/hive/external_data/';
