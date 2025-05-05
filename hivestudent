@@ -1,0 +1,55 @@
+-- Step 1: Create and Use Database
+CREATE DATABASE IF NOT EXISTS student_db;
+USE student_db;
+
+-- Step 2: Create Tables
+CREATE TABLE IF NOT EXISTS student_info (
+    stu_id INT,
+    stu_name STRING,
+    stu_branch STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+CREATE TABLE IF NOT EXISTS student_marks (
+    stu_id INT,
+    subject STRING,
+    marks INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+-- Step 3: Alter Table (Add column)
+ALTER TABLE student_info ADD COLUMNS (stu_year INT);
+
+-- Step 4: Drop Table Example (Optional - for demonstration)
+DROP TABLE IF EXISTS temp_table;
+
+-- Step 5: Load Data into Tables
+LOAD DATA INPATH '/user/hive/student_info.csv' INTO TABLE student_info;
+LOAD DATA INPATH '/user/hive/student_marks.csv' INTO TABLE student_marks;
+
+-- Step 6: Join Tables
+SELECT 
+    s.stu_id, 
+    s.stu_name, 
+    s.stu_branch, 
+    m.subject, 
+    m.marks
+FROM student_info s
+JOIN student_marks m
+ON s.stu_id = m.stu_id;
+
+-- Step 7: Find Students with Marks Greater Than 80
+SELECT 
+    s.stu_id, 
+    s.stu_name, 
+    s.stu_branch, 
+    m.subject, 
+    m.marks
+FROM student_info s
+JOIN student_marks m
+ON s.stu_id = m.stu_id
+WHERE m.marks > 80;
