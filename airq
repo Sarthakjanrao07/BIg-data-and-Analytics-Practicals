@@ -1,0 +1,57 @@
+Perform the following operations using ‘python’ Language on the Air quality dataset.
+1) Data cleaning
+2) Data integration
+3) Data transformation
+4) Data model Building
+______________________________________________________________________________________________
+import pandas as pd
+import numpy as np
+from sklearn.impute import SimpleImputer
+
+# Load datasets
+df = pd.read_csv("air.csv")
+df1 = pd.read_csv("student.csv")
+
+# Initial inspection
+df.shape
+df.head()
+df.count()
+df.isnull().sum()
+df.info()
+
+# Drop rows with any missing values
+A = df.dropna()
+A.shape
+
+# Fill missing values with 0
+A = df.fillna(0)
+A.shape
+
+# Forward fill (pad) missing values
+A = df.fillna(method='pad')
+
+# Backward fill missing values
+A = df.fillna(method='backfill')
+
+# Replace NaN in 'Ozone' with mean
+A = df['Ozone'].replace(np.nan, df['Ozone'].mean())
+A.head(10)
+
+# Replace NaN in 'Ozone' with median
+A = df['Ozone'].replace(np.nan, df['Ozone'].median())
+A.head()
+
+# Imputation using SimpleImputer - Mean
+imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+A = imp.fit_transform(df)
+A
+
+# Imputation using SimpleImputer - Most Frequent
+imp = SimpleImputer(missing_values=np.nan, strategy='most_frequent')
+A = imp.fit_transform(df)
+A
+
+# Data integration
+df1.columns = df1.columns.str.strip()
+combined = pd.concat([df, df1[['roll']]], axis=1)
+combined.head(6)
