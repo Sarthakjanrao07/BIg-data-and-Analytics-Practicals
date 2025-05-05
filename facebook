@@ -1,3 +1,10 @@
+Perform the following operations using ‘python’ LanguageontheFacebook metrics data sets
+1) Transposing Data
+2) Sort data
+3) Create data subsets
+4) Merge Data.
+______________________________________________________________________________________________
+
 import pandas as pd
 import numpy as np
 
