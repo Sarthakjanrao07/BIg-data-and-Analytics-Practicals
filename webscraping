@@ -1,0 +1,40 @@
+# Import BeautifulSoup from bs4 for HTML parsing and requests for making HTTP requests
+import bs4
+import requests
+
+# Send a GET request to the Flipkart product page URL to fetch its HTML content
+request1=requests.get('https://www.flipkart.com/gtplayer-1usa-premium-gaming-chair-ergonomic-design-massager-footrest-360swivel-neck-back-support/p/itm19424a418d868?pid=GACH3WZANCFZYSGZ&lid=LSTGACH3WZANCFZYSGZLXEIS5&marketplace=FLIPKART&store=wwe&srno=b_1_4&otracker=hp_rich_navigation_2_1.navigationCard.RICH_NAVIGATION_Home%2B%26%2BFurniture~Furniture_6O12T1H9D8V3&otracker1=hp_rich_navigation_PINNED_neo%2Fmerchandising_NA_NAV_EXPANDABLE_navigationCard_cc_2_L1_view-all&fm=organic&iid=b35bfb94-3e68-4f7e-be78-0953359e42be.GACH3WZANCFZYSGZ.SEARCH&ppt=None&ppn=None&ssid=g9rkhp78qo0000001746014054217')
+request1
+
+# Create a BeautifulSoup object to parse the HTML content of the page
+soup=bs4.BeautifulSoup(request1.text)
+soup
+
+# Find all <div> elements with class 'RcXBOT' (presumably review text containers) and store them
+reviews=soup.findAll('div', {'class' : 'RcXBOT'})
+
+# Loop through each review and print its text content, adding two newlines for separation
+for review in reviews:
+    print(review.get_text(), end="\n\n")
+
+rating=soup.find('div', {'class':'ipqd2A'}).get_text();
+print(rating)
+
+ind_rat = soup.findAll('div', {'class':'XQDdHH Ga3i8K'});
+for rat in ind_rat:
+    print(rat.get_text() + '\n')
+
+tags=soup.find('span', {'class' : 'VU-ZEz'}).get_text();
+tags
+
+# Find all <p> elements with classes '_2NsDsF AwS1CA' (presumably customer names) and store them
+cust_name = soup.findAll('p', {'class' : '_2NsDsF AwS1CA'});
+for cust in cust_name:
+    print(cust.get_text() + "\n")
+ques=soup.findAll('div', {'class':'wys2hv _43gOsC'})
+
+# Loop through each question
+for que in ques:
+    print(que.get_text() + '\n')
+    ans=que.findNext('div', {'class':'JxAXcP'}).get_text();
+    print(ans + "\n")
