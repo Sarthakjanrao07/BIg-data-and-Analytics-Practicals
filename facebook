@@ -1,0 +1,25 @@
+import pandas as pd
+import numpy as np
+
+# Read the dataset
+df = pd.read_csv('dataset_Facebook.csv', sep=';')
+
+# Display first few rows
+df.head()
+
+# Transpose and show first few rows
+df.transpose().head()
+
+# Sort by Page total likes in descending order
+df.sort_values('Page total likes', ascending=False)
+
+# Create subsets of the dataframe
+df1 = df[['Page total likes','Type','Category', 'Post Month', 'Post Weekday']].iloc[0:16]
+df2 = df[['Page total likes','Type','Category', 'Post Month', 'Post Weekday']].iloc[16:31]
+df3 = df[['Page total likes','Type','Category', 'Post Month', 'Post Weekday']].iloc[31:51]
+
+# Concatenate the subsets and display first few rows
+pd.concat([df1,df2,df3]).head()
+
+# Create pivot table
+pd.pivot_table(df, index=['Type','Category'], values='comment', aggfunc='mean')
